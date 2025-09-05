@@ -1,0 +1,95 @@
+<html>
+   <head>
+      <title>Chat en temps réel</title>
+      <style>
+         body { font-family: Arial, sans-serif; margin: 20px; }
+         #messages { 
+            height: 400px; 
+            overflow-y: auto; 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+         }
+         #messageForm { margin-bottom: 10px; }
+         input[type="text"] { 
+            width: 300px; 
+            padding: 8px; 
+            margin-right: 10px;
+         }
+         input[type="submit"], button { 
+            padding: 8px 15px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            cursor: pointer;
+         }
+         input[type="submit"]:hover, button:hover { 
+            background-color: #0056b3; 
+         }
+         .message { margin-bottom: 5px; }
+         .pseudo { font-weight: bold; color: #007bff; }
+      </style>
+   </head>
+   <body>
+      <h2>Chat en temps réel - Bienvenue {{ pseudo }}!</h2>
+      
+      <div id="messages">
+         {% for message in messages %}
+            <div class="message">
+               <span class="pseudo">{{ message.pseudo }}:</span> {{ message.text }}
+            </div>
+         {% endfor %}
+      </div>
+      
+      <form id="messageForm">
+         <input type="text" id="messageInput" placeholder="Tapez votre message..." required>
+         <input type="submit" value="Envoyer">
+      </form>
+      
+      <br>
+      <a href="/" style="color: #007bff; text-decoration: none;">Quitter le chat</a>
+      
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+         const socket = io();
+         const messagesDiv = document.getElementById('messages');
+         const messageForm = document.getElementById('messageForm');
+         const messageInput = document.getElementById('messageInput');
+         const pseudo = '{{ pseudo }}';
+         
+         // Fonction pour ajouter un message à l'affichage
+         function addMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message';
+            messageElement.innerHTML = `<span class="pseudo">${message.pseudo}:</span> ${message.text}`;
+            messagesDiv.appendChild(messageElement);
+            
+            // Faire défiler vers le bas
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+         }
+         
+         // Écouter les nouveaux messages
+         socket.on('new_message', function(message) {
+            addMessage(message);
+         });
+         
+         // Envoyer un message
+         messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            
+            if (message) {
+               socket.emit('send_message', {
+                  pseudo: pseudo,
+                  message: message
+               });
+               messageInput.value = '';
+            }
+         });
+         
+         // Focus sur le champ de saisie
+         messageInput.focus();
+      </script>
+   </body>
+</html>

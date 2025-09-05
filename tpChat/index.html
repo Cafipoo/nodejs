@@ -1,0 +1,46 @@
+<html>
+   <head>
+      <title>Chat en temps réel - Connexion</title>
+      <style>
+         body { 
+            font-family: Arial, sans-serif; 
+            margin: 50px auto; 
+            max-width: 400px;
+            text-align: center;
+         }
+         h2 { color: #007bff; }
+         input[type="text"] { 
+            width: 200px; 
+            padding: 10px; 
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+         }
+         input[type="submit"] { 
+            padding: 10px 20px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+         }
+         input[type="submit"]:hover { 
+            background-color: #0056b3; 
+         }
+      </style>
+   </head>
+   <body>
+      <h2>Bienvenue dans le Chat en temps réel</h2>
+      
+      <form action="/enter_chat" method="POST">
+         <div>
+            <label for="pseudo">Pseudo:</label><br>
+            <input type="text" id="pseudo" name="pseudo" placeholder="Entrez votre pseudo" required maxlength="20">
+         </div>
+         <br>
+         <input type="submit" value="Entrer dans le chat">
+      </form>
+      
+   </body>
+</html>
