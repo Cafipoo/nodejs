@@ -1,54 +1,30 @@
-<html>
+<!DOCTYPE html>
+<html lang="fr">
    <head>
-      <title>Chat en temps réel</title>
-      <style>
-         body { font-family: Arial, sans-serif; margin: 20px; }
-         #messages { 
-            height: 400px; 
-            overflow-y: auto; 
-            border: 1px solid #ccc; 
-            padding: 10px; 
-            margin-bottom: 20px;
-            background-color: #f9f9f9;
-         }
-         #messageForm { margin-bottom: 10px; }
-         input[type="text"] { 
-            width: 300px; 
-            padding: 8px; 
-            margin-right: 10px;
-         }
-         input[type="submit"], button { 
-            padding: 8px 15px; 
-            background-color: #007bff; 
-            color: white; 
-            border: none; 
-            cursor: pointer;
-         }
-         input[type="submit"]:hover, button:hover { 
-            background-color: #0056b3; 
-         }
-         .message { margin-bottom: 5px; }
-         .pseudo { font-weight: bold; color: #007bff; }
-      </style>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>🍸 Club Chat - {{ pseudo }}</title>
+      <link rel="stylesheet" href="/style.css">
    </head>
    <body>
-      <h2>Chat en temps réel - Bienvenue {{ pseudo }}!</h2>
-      
-      <div id="messages">
-         {% for message in messages %}
-            <div class="message">
-               <span class="pseudo">{{ message.pseudo }}:</span> {{ message.text }}
-            </div>
-         {% endfor %}
+      <div class="container">
+         <h2>🍸 Club Chat - Bienvenue {{ pseudo }}! 🎵</h2>
+         
+         <div id="messages">
+            {% for message in messages %}
+               <div class="message">
+                  <span class="pseudo">{{ message.pseudo }}:</span> {{ message.text }}
+               </div>
+            {% endfor %}
+         </div>
+         
+         <form id="messageForm">
+            <input type="text" id="messageInput" placeholder="💬 Parlez dans le club..." required autocomplete="off">
+            <input type="submit" value="🚀 Envoyer">
+         </form>
+         
+         <a href="/" class="quit-link">🚪 Quitter le club</a>
       </div>
-      
-      <form id="messageForm">
-         <input type="text" id="messageInput" placeholder="Tapez votre message..." required>
-         <input type="submit" value="Envoyer">
-      </form>
-      
-      <br>
-      <a href="/" style="color: #007bff; text-decoration: none;">Quitter le chat</a>
       
       <script src="/socket.io/socket.io.js"></script>
       <script>
@@ -68,6 +44,16 @@
             // Faire défiler vers le bas
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
          }
+         
+         // Charger les messages existants via Socket.IO
+         socket.on('load_messages', function(messages) {
+            // Vider la div des messages existants (venant du template)
+            messagesDiv.innerHTML = '';
+            // Ajouter tous les messages
+            messages.forEach(function(message) {
+               addMessage(message);
+            });
+         });
          
          // Écouter les nouveaux messages
          socket.on('new_message', function(message) {
