@@ -1,4 +1,4 @@
-/* Thème Bar/Boîte de nuit */
+/* 🍸 Thème Bar/Boîte de nuit - Club Chat */
 * {
     margin: 0;
     padding: 0;
@@ -6,15 +6,16 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0d2e 25%, #2d1b69 50%, #0f0f23 75%, #000000 100%);
     color: #ffffff;
     min-height: 100vh;
     overflow-x: hidden;
     position: relative;
+    padding: 10px;
 }
 
-/* Effet de lumières néon en arrière-plan */
+/* Effet de lumières néon flottantes en arrière-plan */
 body::before {
     content: '';
     position: fixed;
@@ -23,21 +24,44 @@ body::before {
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(circle at 20% 30%, rgba(255, 0, 150, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(255, 255, 0, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 15% 25%, rgba(255, 0, 150, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(0, 255, 255, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 45% 80%, rgba(255, 215, 0, 0.08) 0%, transparent 35%),
+        radial-gradient(circle at 70% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
     pointer-events: none;
     z-index: -1;
+    animation: neonPulse 8s ease-in-out infinite alternate;
 }
 
+@keyframes neonPulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 0.9; }
+    100% { opacity: 0.7; }
+}
+
+/* Conteneur principal */
 .container {
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
     position: relative;
     z-index: 1;
+    animation: fadeInUp 0.8s ease-out;
 }
 
+/* Animation d'entrée */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Titre principal avec effet néon */
 h2 {
     text-align: center;
     font-size: 2.5em;
@@ -52,164 +76,296 @@ h2 {
 
 @keyframes neonGlow {
     from {
-        filter: drop-shadow(0 0 5px rgba(255, 0, 110, 0.8));
+        filter: drop-shadow(0 0 10px rgba(255, 0, 128, 0.9));
     }
     to {
-        filter: drop-shadow(0 0 20px rgba(255, 0, 110, 0.8)) drop-shadow(0 0 30px rgba(131, 56, 236, 0.5));
+        filter: drop-shadow(0 0 30px rgba(255, 0, 128, 0.9)) 
+                drop-shadow(0 0 50px rgba(128, 0, 255, 0.7));
     }
 }
 
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Zone de messages avec effet glassmorphism */
 #messages {
     height: 450px;
     overflow-y: auto;
-    background: rgba(0, 0, 0, 0.7);
+    overflow-x: hidden;
+    background: rgba(0, 0, 0, 0.85);
     border: 2px solid transparent;
-    border-image: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff) 1;
-    padding: 20px;
+    border-image: linear-gradient(45deg, #ff0080, #8000ff, #00ffff) 1;
+    padding: 25px;
     margin-bottom: 25px;
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
+    border-radius: 0 10px 10px 0;
+    backdrop-filter: blur(20px);
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 15px 50px rgba(0, 0, 0, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 30px rgba(255, 0, 128, 0.2);
     position: relative;
+    list-style: none;
 }
 
-/* Scrollbar personnalisée */
+/* Barre de défilement personnalisée style néon */
 #messages::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
 }
 
 #messages::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
 }
 
 #messages::-webkit-scrollbar-thumb {
-    background: linear-gradient(45deg, #ff006e, #8338ec);
-    border-radius: 4px;
+    background: linear-gradient(180deg, #ff0080, #8000ff);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 0, 128, 0.5);
 }
 
 #messages::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(45deg, #ff4081, #9c4dcc);
+    background: linear-gradient(180deg, #ff4099, #9933ff);
+    box-shadow: 0 0 15px rgba(255, 0, 128, 0.8);
 }
 
+/* Messages individuels */
 .message {
-    margin-bottom: 15px;
-    padding: 12px 15px;
+    margin-bottom: 20px;
+    padding: 18px 25px;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    border-left: 3px solid;
-    border-image: linear-gradient(45deg, #ff006e, #8338ec) 1;
-    animation: slideIn 0.3s ease-out;
-    backdrop-filter: blur(5px);
+    border-radius: 0 10px 10px 0;
+    border-left: 4px solid;
+    border-image: linear-gradient(45deg, #ff0080, #8000ff) 1;
+    animation: slideIn 0.4s ease-out;
+    backdrop-filter: blur(10px);
     transition: all 0.3s ease;
+    font-size: 16px;
+    line-height: 1.6;
+    position: relative;
+    overflow: hidden;
+}
+
+.message:last-child {
+    margin-bottom: 0;
+}
+
+.message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(255, 0, 128, 0.1), rgba(128, 0, 255, 0.1));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .message:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.12);
+    transform: scale(1.02);
+    box-shadow: 
+        0 8px 25px rgba(255, 0, 128, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.message:hover::before {
+    opacity: 1;
 }
 
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(20px) scale(0.95);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
+/* Pseudos avec effet néon */
 .pseudo {
     font-weight: bold;
-    color: #ff006e;
-    text-shadow: 0 0 10px rgba(255, 0, 110, 0.5);
-    margin-right: 8px;
+    color: #ff0080;
+    text-shadow: 0 0 15px rgba(255, 0, 128, 0.8);
+    margin-right: 12px;
+    font-size: 18px;
+    margin-left: 8px;
+    position: relative;
+    z-index: 2;
 }
 
+/* Formulaire de message */
 #messageForm {
     display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 20px;
+    margin-bottom: 25px;
     align-items: center;
 }
 
 #messageInput {
     flex: 1;
-    padding: 15px 20px;
-    background: rgba(0, 0, 0, 0.6);
+    padding: 20px 25px;
+    background: rgba(0, 0, 0, 0.8);
     border: 2px solid transparent;
-    border-radius: 25px;
+    border-radius: 35px;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 18px;
     outline: none;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
+    min-height: 60px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 #messageInput:focus {
-    border-color: #ff006e;
+    border-color: #ff0080;
     box-shadow: 
-        0 0 20px rgba(255, 0, 110, 0.3),
+        0 0 25px rgba(255, 0, 128, 0.5),
+        inset 0 2px 10px rgba(0, 0, 0, 0.5),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.02);
 }
 
 #messageInput::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.6);
 }
 
-input[type="submit"] {
-    padding: 15px 30px;
-    background: linear-gradient(45deg, #ff006e, #8338ec);
+/* Boutons avec effet de pulsation néon */
+button, #pseudo-submit, input[type="submit"], button[type="submit"] {
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #ff0080, #8000ff);
     color: white;
     border: none;
-    border-radius: 25px;
+    border-radius: 35px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 0, 110, 0.3);
+    box-shadow: 
+        0 5px 20px rgba(255, 0, 128, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    min-height: 60px;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
 }
 
-input[type="submit"]:hover {
-    background: linear-gradient(45deg, #ff4081, #9c4dcc);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 0, 110, 0.5);
+button::before, #pseudo-submit::before, 
+input[type="submit"]::before, button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
 }
 
-input[type="submit"]:active {
-    transform: translateY(0);
+button:hover, #pseudo-submit:hover, 
+input[type="submit"]:hover, button[type="submit"]:hover {
+    background: linear-gradient(45deg, #ff4099, #9933ff);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 10px 30px rgba(255, 0, 128, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
+button:hover::before, #pseudo-submit:hover::before,
+input[type="submit"]:hover::before, button[type="submit"]:hover::before {
+    left: 100%;
+}
+
+button:active, #pseudo-submit:active,
+input[type="submit"]:active, button[type="submit"]:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+/* Lien de sortie */
 .quit-link {
     display: inline-block;
-    color: #8338ec;
+    color: #00ffff;
     text-decoration: none;
     font-weight: bold;
-    padding: 10px 20px;
-    border: 2px solid #8338ec;
-    border-radius: 20px;
+    padding: 12px 25px;
+    border: 2px solid #00ffff;
+    border-radius: 25px;
     transition: all 0.3s ease;
     text-align: center;
-    background: rgba(131, 56, 236, 0.1);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
 }
 
 .quit-link:hover {
-    background: rgba(131, 56, 236, 0.2);
+    background: rgba(0, 255, 255, 0.2);
     color: #ffffff;
     border-color: #ffffff;
-    box-shadow: 0 0 15px rgba(131, 56, 236, 0.5);
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
 }
 
-/* Effets de particules */
-.container::before {
+/* Conteneurs avec animations de particules */
+#pseudo-container, #chat-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 25px;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+#pseudo-container {
+    text-align: center;
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+/* Input pseudo avec effet glassmorphism */
+#pseudo-input {
+    padding: 20px 30px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid transparent;
+    border-radius: 35px;
+    color: #ffffff;
+    font-size: 18px;
+    outline: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(15px);
+    min-width: 400px;
+    min-height: 60px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+#pseudo-input:focus {
+    border-color: #ff0080;
+    box-shadow: 
+        0 0 25px rgba(255, 0, 128, 0.5),
+        inset 0 2px 10px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.02);
+}
+
+#pseudo-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Effet de particules flottantes */
+.container::after {
     content: '';
     position: absolute;
     top: 0;
@@ -217,62 +373,107 @@ input[type="submit"]:active {
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(2px 2px at 40px 60px, rgba(255, 255, 255, 0.3), transparent),
-        radial-gradient(2px 2px at 90px 40px, rgba(255, 0, 110, 0.4), transparent),
-        radial-gradient(1px 1px at 130px 80px, rgba(131, 56, 236, 0.4), transparent),
-        radial-gradient(1px 1px at 160px 30px, rgba(58, 134, 255, 0.3), transparent);
+        radial-gradient(2px 2px at 40px 60px, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(3px 3px at 90px 40px, rgba(255, 0, 128, 0.5), transparent),
+        radial-gradient(2px 2px at 130px 80px, rgba(128, 0, 255, 0.4), transparent),
+        radial-gradient(1px 1px at 160px 30px, rgba(0, 255, 255, 0.4), transparent),
+        radial-gradient(2px 2px at 200px 100px, rgba(255, 215, 0, 0.3), transparent);
     background-repeat: repeat;
-    background-size: 200px 200px;
-    animation: particleFloat 20s linear infinite;
+    background-size: 300px 300px;
+    animation: particleFloat 25s linear infinite;
     pointer-events: none;
-    opacity: 0.6;
+    opacity: 0.7;
+    z-index: -1;
 }
 
 @keyframes particleFloat {
     0% {
-        transform: translateY(0px);
+        transform: translateY(0px) rotate(0deg);
     }
     100% {
-        transform: translateY(-200px);
-    }
-}
-
-/* Animation d'entrée pour la page */
-.container {
-    animation: fadeInUp 0.8s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+        transform: translateY(-300px) rotate(360deg);
     }
 }
 
 /* Responsivité */
 @media (max-width: 768px) {
-    .container {
+    body {
+        padding: 5px;
+    }
+    
+    .container, #pseudo-container, #chat-container {
         padding: 15px;
+        max-width: 100%;
     }
     
     h2 {
-        font-size: 2em;
+        font-size: 2.5em;
+        margin-bottom: 20px;
     }
     
     #messages {
-        height: 350px;
+        height: 50vh;
+        min-height: 400px;
+        padding: 20px;
     }
     
     #messageForm {
         flex-direction: column;
-        gap: 10px;
+        gap: 15px;
     }
     
-    #messageInput {
+    #messageInput, #pseudo-input {
         width: 100%;
+        min-width: unset;
+        font-size: 16px;
+        min-height: 50px;
+        padding: 15px 20px;
     }
+    
+    button, #pseudo-submit, input[type="submit"], button[type="submit"] {
+        width: 100%;
+        font-size: 16px;
+        padding: 16px 30px;
+        min-height: 50px;
+    }
+    
+    .message {
+        padding: 16px 20px;
+        font-size: 15px;
+    }
+    
+    .pseudo {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 2em;
+        letter-spacing: 1px;
+    }
+    
+    #messages {
+        height: 45vh;
+        min-height: 350px;
+        padding: 15px;
+    }
+    
+    .message {
+        padding: 14px 18px;
+        font-size: 14px;
+    }
+    
+    #pseudo-input {
+        min-width: 280px;
+    }
+}
+
+/* Animation d'entrée pour tous les éléments */
+#messages, #messageForm, .quit-link {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+#pseudo-container > * {
+    animation: fadeInUp 0.6s ease-out 0.3s both;
 }
