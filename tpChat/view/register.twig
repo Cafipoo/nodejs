@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer un compte</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="register-container">
+    <h2>Créer un compte</h2>
+
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form id="registerForm" action="/register" method="post">
+      <input type="text" id="register-pseudo" name="pseudo" placeholder="Votre pseudo" value="{{ pseudo|default('') }}" required autocomplete="username" />
+      <input type="email" id="register-email" name="email" placeholder="Votre email" value="{{ email|default('') }}" required autocomplete="email" />
+      <input type="password" id="register-password" name="password" placeholder="Mot de passe" required autocomplete="new-password" />
+      <button type="submit" id="register-submit">S'inscrire</button>
+    </form>
+
+    <p>Vous avez déjà un compte ? <a href="/">Se connecter</a></p>
+  </div>
+</body>
+</html>
+
+

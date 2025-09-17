@@ -88,6 +88,57 @@ app.get('/', async (req, res) => {
   }
 });
 
+// Inscription: GET /register
+app.get('/register', (req, res) => {
+  try {
+    const user = req.session && req.session.user ? req.session.user : null;
+    if (user) {
+      return res.redirect('/');
+    }
+    return res.render('register', { error: '', pseudo: '', email: '' });
+  } catch (err) {
+    console.error('Erreur /register GET:', err);
+    return res.status(500).send('Erreur serveur');
+  }
+});
+
+// Inscription: POST /register
+app.post('/register', async (req, res) => {
+  try {
+    const { pseudo, email, password } = req.body || {};
+    if (!pseudo || !email || !password) {
+      return res.status(400).render('register', {
+        error: 'Tous les champs sont requis',
+        pseudo: pseudo || '',
+        email: email || '',
+      });
+    }
+
+    const existing = await prisma.user.findFirst({ where: { pseudo } });
+    if (existing) {
+      return res.status(409).render('register', {
+        error: 'Ce pseudo est déjà utilisé',
+        pseudo,
+        email,
+      });
+    }
+
+    const created = await prisma.user.create({
+      data: { pseudo, email, password, IsActive: true },
+    });
+
+    req.session.user = { id: created.id, pseudo: created.pseudo };
+    return res.redirect('/');
+  } catch (err) {
+    console.error('Erreur /register POST:', err);
+    return res.status(500).render('register', {
+      error: 'Erreur serveur',
+      pseudo: (req.body && req.body.pseudo) || '',
+      email: (req.body && req.body.email) || '',
+    });
+  }
+});
+
 // Auth: POST /login
 app.post('/login', async (req, res) => {
   try {
