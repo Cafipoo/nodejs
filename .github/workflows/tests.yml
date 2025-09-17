@@ -1,0 +1,51 @@
+name: CI Tests
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'tpChat/**'
+      - '.github/workflows/tests.yml'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'tpChat/**'
+      - '.github/workflows/tests.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_ENV: test
+
+    defaults:
+      run:
+        working-directory: tpChat
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: tpChat/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install additional test dependencies (without saving)
+        run: npm install -D @babel/preset-env --no-save
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run tests
+        run: npm run test
+
+
