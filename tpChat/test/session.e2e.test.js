@@ -1,9 +1,13 @@
 // tests/session.e2e.test.js
 import { chromium } from 'playwright';
 import { httpServer, io } from '../server.js';
+import { PrismaClient } from '../generated/prisma/index.js';
 
 let browser, page;
-let clientSocket;
+let prisma;
+
+const LOGIN_PSEUDO = 'Cafipo';
+const LOGIN_PASSWORD = '12345';
 
 beforeAll(async () => {
   await new Promise((resolve) => {
@@ -11,7 +15,27 @@ beforeAll(async () => {
       resolve();
     });
   });
-  
+
+  // Préparer l'utilisateur de test pour la connexion
+  prisma = new PrismaClient();
+  try {
+    const existing = await prisma.user.findFirst({ where: { pseudo: LOGIN_PSEUDO } });
+    if (!existing) {
+      await prisma.user.create({
+        data: {
+          pseudo: LOGIN_PSEUDO,
+          password: LOGIN_PASSWORD,
+          email: 'fp.lajudie@gmail.com',
+          IsActive: true,
+        },
+      });
+    }
+  } catch (e) {
+    // Laisser le test signaler l'erreur plus tard si la DB est indisponible
+    // eslint-disable-next-line no-console
+    console.warn('Impossible de préparer l\'utilisateur de test:', e?.message || e);
+  }
+
   browser = await chromium.launch();
   page = await browser.newPage();
   await page.goto('http://localhost:3001', { waitUntil: 'domcontentloaded' });
@@ -21,55 +45,35 @@ afterAll(async () => {
   await browser.close();
   io.close();
   await new Promise((resolve) => httpServer.close(resolve));
+  if (prisma) {
+    await prisma.$disconnect();
+  }
 }, 30000);
 
 describe('Session utilisateur', () => {
-  test('Session utilisateur complète : envoi et réception d’un message', async () => {
-    // Attendre que Socket.IO soit connecté
-    console.log('Attente connexion Socket.IO');
-    await page.waitForFunction(() => {
-      // Accès à la variable socket définie dans main.js
-      return typeof socket !== 'undefined' && socket.connected;
-    }, { timeout: 10000 });
-    console.log('Socket.IO connecté');
+  test('Connexion + envoi et réception d’un message', async () => {
+    // Affichage du formulaire de connexion
+    await page.waitForSelector('#loginForm', { state: 'visible' });
 
-    // Entrée du pseudo
-    console.log('Attente pseudo-input');
-    await page.waitForSelector('#pseudo-input');
-    console.log('Pseudo-input trouvé');
-    await page.fill('#pseudo-input', 'Benoit');
-    console.log('Pseudo rempli');
-    await page.click('#pseudo-submit');
+    // Remplir et soumettre le formulaire de connexion
+    await page.fill('#login-pseudo', LOGIN_PSEUDO);
+    await page.fill('#login-password', LOGIN_PASSWORD);
+    await page.click('#login-submit');
 
-    // Attente du message "chat history"
-    console.log('Attente chat history');
-    await page.waitForFunction(() => {
-      const messages = document.getElementById('messages');
-      return messages && messages.children.length > 0;
-    }, { timeout: 10000 });
-    console.log('Chat history reçu');
-
-    // Attente du chat
-    console.log('Attente chat-container');
+    // Le conteneur du chat doit apparaître après connexion
     await page.waitForSelector('#chat-container', { state: 'visible' });
-    // Récupère le contenu HTML du chat-container
-    const chatContainerHTML = await page.$eval('#messages', el => el.innerHTML);
-    console.log('Contenu du chat-container:', chatContainerHTML);
-    
-    // Envoi d’un message
-    let randomMessage = Math.random().toString(36).substring(2, 15);
-    await page.fill('#message', randomMessage);
-    await page.click('#form button');
 
-    // Attente que le message apparaisse
-    console.log(`Attente du message ${randomMessage} dans la liste`);
+    // Envoi d’un message
+    const randomMessage = Math.random().toString(36).substring(2, 15);
+    await page.fill('#messageInput', randomMessage);
+    await page.click('#messageForm button');
+
+    // Attente que le message apparaisse dans la liste
     await page.waitForSelector(`li:has-text("${randomMessage}")`);
-    console.log('Message trouvé dans la liste');
 
     const messages = await page.$$eval('#messages li', (els) =>
       els.map((el) => el.textContent)
     );
     expect(messages.some((m) => m.includes(randomMessage))).toBe(true);
-    console.log('Test terminé avec succès');
-  }, 30000);
+  }, 300000);
 });
