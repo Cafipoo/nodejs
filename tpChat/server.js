@@ -9,7 +9,14 @@ dotenv.config();
 const prisma = new PrismaClient();
 
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+const FRONT_URL = process.env.FRONT_URL;
+const io = new Server(httpServer, {
+  cors: {
+    origin: FRONT_URL || true,
+    credentials: true,
+    methods: ['GET', 'POST']
+  }
+});
 
 // Socket.IO
 io.on('connection', async (socket) => {

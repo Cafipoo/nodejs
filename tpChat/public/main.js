@@ -1,24 +1,47 @@
 const socket = io();
 
-const pseudoContainer = document.getElementById('pseudo-container');
+const pseudoContainer = document.getElementById('login-container');
 const chatContainer = document.getElementById('chat-container');
-const pseudoInput = document.getElementById('pseudo-input');
-const pseudoSubmit = document.getElementById('pseudo-submit');
+const loginForm = document.getElementById('loginForm');
+const pseudoInput = document.getElementById('login-pseudo');
+const passwordInput = document.getElementById('login-password');
 const messageForm = document.getElementById('messageForm');
 const messageInput = document.getElementById('messageInput');
 const messages = document.getElementById('messages');
+const quitLink = document.querySelector('a.quit-link');
 
 let pseudo = null;
 
-// Gestion de la saisie du pseudo
-if (pseudoSubmit) {
-  pseudoSubmit.addEventListener('click', () => {
-    const val = pseudoInput.value.trim();
-    if (val) {
-      pseudo = val;
+// Gestion du formulaire de connexion
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const body = {
+      pseudo: (pseudoInput && pseudoInput.value || '').trim(),
+      password: (passwordInput && passwordInput.value || ''),
+    };
+    if (!body.pseudo || !body.password) {
+      alert('Veuillez entrer le pseudo et le mot de passe');
+      return;
+    }
+    try {
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        alert(data.message || 'Échec de la connexion');
+        return;
+      }
+      pseudo = data.pseudo;
       pseudoContainer.style.display = 'none';
       chatContainer.style.display = 'block';
-      messageInput.focus();
+      messageInput && messageInput.focus();
+    } catch (err) {
+      console.error('Erreur de connexion', err);
+      alert('Erreur de connexion');
     }
   });
 }
@@ -51,6 +74,17 @@ socket.on('chat message', (data) => {
   // Faire défiler vers le bas
   messages.scrollTop = messages.scrollHeight;
 });
+
+// Déconnexion
+if (quitLink) {
+  quitLink.addEventListener('click', async (e) => {
+    e.preventDefault();
+    try {
+      await fetch('/logout', { method: 'GET', credentials: 'same-origin' });
+    } catch (_) {}
+    window.location.href = '/';
+  });
+}
 
 // Réception de l'historique des messages
 socket.on('chat history', (msgs) => {

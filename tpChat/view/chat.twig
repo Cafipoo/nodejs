@@ -9,19 +9,22 @@
   <script defer src="/main.js"></script>
 </head>
 <body>
-  <div id="pseudo-container">
-    <h2>Entrez votre pseudo</h2>
-    <input type="text" id="pseudo-input" placeholder="Votre pseudo" />
-    <button id="pseudo-submit">Valider</button>
+  <div id="login-container"{% if pseudo %} style="display:none;"{% endif %}>
+    <h2>Connexion</h2>
+    <form id="loginForm">
+      <input type="text" id="login-pseudo" name="pseudo" placeholder="Votre pseudo" required autocomplete="username" />
+      <input type="password" id="login-password" name="password" placeholder="Mot de passe" required autocomplete="current-password" />
+      <button type="submit" id="login-submit">Se connecter</button>
+    </form>
   </div>
 
-  <div id="chat-container" style="display:none;">
+  <div id="chat-container"{% if not pseudo %} style="display:none;"{% endif %}>
     <h2>🍸 Club Chat - Bienvenue {{ pseudo }}! 🎵</h2>
     
     <ul id="messages">
        {% for message in messages %}
           <li class="message">
-             <span class="pseudo">{{ message.pseudo }}:</span> {{ message.text }}
+             <span class="pseudo">{{ message.pseudo }}:</span> {{ message.content }}
           </li>
        {% endfor %}
     </ul>
@@ -31,7 +34,7 @@
        <button type="submit">🚀 Envoyer</button>
     </form>
     
-    <a href="/" class="quit-link">🚪 Quitter le club</a>
+    <a href="/logout" class="quit-link">🚪 Quitter le club</a>
   </div>
 </body>
 </html>

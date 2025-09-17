@@ -20,3 +20,11 @@ model Message {
   content String
   createdAt DateTime @default(now())
 }
+
+model User {
+  id Int @id @default(autoincrement())
+  pseudo String
+  password String
+  email String
+  IsActive Boolean @default(true)
+}
