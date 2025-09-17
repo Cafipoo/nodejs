@@ -1,23 +1,15 @@
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { PrismaClient } from './generated/prisma/index.js';
-import dotenv from 'dotenv';
 import app from './app.js';
 
+import dotenv from 'dotenv';
 dotenv.config();
 
 const prisma = new PrismaClient();
 
-// Serveur HTTP avec l'app Express
 const httpServer = createServer(app);
 const io = new Server(httpServer);
-
-// Pour les tests, on peut utilise run echo simple
-io.on('connection', (socket) => {
-  socket.on('message', (data) => {
-    socket.emit('message', data);
-  });
-});
 
 // Socket.IO
 io.on('connection', async (socket) => {
@@ -29,7 +21,7 @@ io.on('connection', async (socket) => {
       orderBy: { createdAt: 'asc' },  // ou 'desc' puis inverser côté client
       take: 50,
     });
-    // Envoyer l'historique au client connecté
+    // Envoyer l’historique au client connecté
     socket.emit('chat history', lastMessages);
   } catch (err) {
     console.error('Erreur récupération historique:', err);
@@ -54,16 +46,4 @@ io.on('connection', async (socket) => {
   });
 });
 
-
-
-// Export pour les tests
-export { httpServer };
-
-// Démarrage
-const PORT = process.env.PORT || 3000;
-// Ne démarre le serveur que si ce n'est pas un test
-if (process.env.NODE_ENV !== 'test') {
-  httpServer.listen(PORT, () => {
-    console.log(`Serveur lancé sur http://localhost:${PORT}`);
-  });
-}
+export { httpServer, io };

@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/route.test.js",
-    "test:socket": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/socket.test.js"
+    "test:socket": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/socket.test.js",
+    "test:session": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/session.e2e.test.js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "twig": "^1.17.1"
   },
   "devDependencies": {
+    "playwright": "^1.55.0",
     "socket.io-client": "^4.8.1",
     "supertest": "^7.1.4"
   }
